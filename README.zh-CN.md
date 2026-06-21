@@ -4,7 +4,7 @@
 
 QuickReview 是一个面向笔记的多 Agent 审阅与润色插件。它可以帮助你检查事实、优化措辞、扩展思路，并在需要时把润色后的版本直接写回编辑器。
 
-![screenshot](images\image.png)
+![screenshot](images/image.png)
 
 它适合这些场景：
 

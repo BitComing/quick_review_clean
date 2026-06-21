@@ -4,7 +4,7 @@
 
 QuickReview is a multi-agent review and polishing plugin for notes. It helps you inspect facts, improve wording, expand ideas, and optionally write a polished version back into the editor.
 
-![screenshot](images\image.png)
+![screenshot](images/image.png)
 
 It is useful when you want to:
 

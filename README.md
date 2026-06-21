@@ -1,259 +1,267 @@
 # QuickReview
 
-QuickReview 是一个面向 Obsidian 的多 Agent 审阅与润色插件，用来帮你快速检查笔记内容、优化表达、补充思路，并在需要时继续追问或直接把润色结果写回原文。
+QuickReview is a multi-agent review and polishing plugin for notes. It helps you inspect facts, improve wording, expand ideas, and optionally write a polished version back into the editor.
 
-它适合这些场景：
+It is useful when you want to:
 
-- 写完一段笔记后，快速检查事实、逻辑和表达问题
-- 对选中文本做局部审阅，而不影响整篇内容
-- 用不同角色的 Agent 从不同角度给出建议
-- 一键润色当前选区，并直接替换回编辑器
-- 在审阅结果基础上继续多轮追问
+- review a newly written note for factual, logical, or wording issues
+- inspect only the selected text without touching the whole note
+- gather feedback from multiple agent roles with different focuses
+- polish the current selection and replace it in place
+- continue asking follow-up questions based on the review results
 
-## 核心功能
+## Features
 
-- 多 Agent 审阅
-  - 默认内置 `事实`、`表述`、`衍生`、`关联`、`重构` 五类审阅 Agent
-  - 支持单独运行某个 Agent，也支持运行 `综合审阅`
-- 选区 / 全文双模式
-  - 可对选中文本发起审阅
-  - 可对整篇当前笔记发起审阅
-- 一键润色
-  - 对选中文本进行克制式润色
-  - 支持将润色结果直接应用到原文
-- 可追问的结果视图
-  - 审阅结果会显示在独立视图中
-  - 可继续追问，形成单独聊天会话
-- 可配置 Agent
-  - 自定义 Agent 的 `id`、`label`、`title`
-  - 自定义 `systemRole` 与 `focus`
-  - 可新增、删除、恢复默认 Agent
-- 可配置工具调用
-  - `current-date`：获取当前日期、时区与星期
-  - `web-search`：联网搜索最新公开信息
-- 可配置上下文菜单
-  - 控制按钮是否显示
-  - 支持拖拽排序
-- 支持多种模型接口
-  - `OpenAI 兼容`
+- Multi-agent review
+  - Built-in agents for factual review, wording, expansion, connection, restructuring, and polishing
+  - Run a single agent or a combined review
+- Selection and full-note modes
+  - Review only the selected text
+  - Review the entire active note
+- One-click polish
+  - Rewrite the selected text conservatively
+  - Apply the polished result directly back to the editor
+- Follow-up chat
+  - Review results open in a dedicated view
+  - Continue the discussion with follow-up questions
+- Configurable agents
+  - Customize each agent's `id`, `label`, `title`, `systemRole`, and `focus`
+  - Add, remove, or restore built-in agents
+- Configurable tools
+  - `current-date`: returns the current local date, weekday, timezone, and UTC offset
+  - `web-search`: searches for recent public information on the web
+- Configurable context menu
+  - Show or hide action buttons
+  - Reorder them with drag and drop
+- Multiple API styles
+  - `OpenAI-compatible`
   - `Anthropic Messages`
 
-## 默认 Agent
+## Default agents
 
-插件默认提供以下角色：
+The plugin includes these roles by default:
 
-- `事实`：检查事实错误、概念混淆、时间线问题、证据不足
-- `表述`：检查表达清晰度、逻辑衔接、结构和可读性
-- `衍生`：发现可继续补充的话题、背景和案例
-- `关联`：补充理论框架、经典概念、学习路径和权威视角
-- `重构`：提炼核心观点，重排结构，压缩冗余表达
-- `润色`：对选中文本做不改变原意的语言优化
+- `Facts`: checks factual errors, concept confusion, timeline issues, and weak evidence
+- `Wording`: checks clarity, structure, readability, and logical flow
+- `Expansion`: suggests topics, context, and examples worth adding
+- `Connection`: adds frameworks, classic concepts, study paths, and authoritative viewpoints
+- `Restructure`: distills the core point, reorganizes structure, and compresses redundancy
+- `Polish`: improves language without changing the original meaning
 
-## 安装
+## Installation
 
-目前适合手动安装到本地 Obsidian 插件目录。
+This plugin is currently intended for manual installation.
 
-1. 打开你的 Obsidian 仓库目录
-2. 进入 `.obsidian/plugins/`
-3. 创建或使用 `quick_review` 文件夹
-4. 将以下文件放入该目录：
+1. Open your vault folder.
+2. Go to `.obsidian/plugins/`.
+3. Create or open a folder named `quick_review`.
+4. Copy these files into that folder:
    - `manifest.json`
    - `main.js`
    - `styles.css`
-5. 回到 Obsidian，在“设置 -> 第三方插件”中启用 `QuickReview`
+5. Enable `QuickReview` from the community plugins settings.
 
-## 配置
+## Configuration
 
-启用插件后，进入 `设置 -> QuickReview`。
+After enabling the plugin, open `Settings -> QuickReview`.
 
-### 1. LLM API 配置
+### 1. LLM API settings
 
-需要至少配置以下项目：
+Required:
 
-- `API 类型`
-  - `OpenAI 兼容`
+- `API type`
+  - `OpenAI-compatible`
   - `Anthropic Messages`
 - `API URL`
 - `API Key`
-- `模型名称`
+- `Model name`
 
-可选项：
+Optional:
 
 - `Temperature`
-- `最大输出 Tokens`
-- `自定义 Headers`
-- `输出语言`
+- `Max output tokens`
+- `Custom headers`
+- `Output language`
 
-说明：
+Notes:
 
-- 配置会保存在插件目录下的 `data.json`
-- `API URL` 需要填写完整接口地址
-- `自定义 Headers` 使用 JSON 格式
+- Settings are saved in the plugin's `data.json`
+- `API URL` should be the full endpoint URL
+- `Custom headers` must be valid JSON
 
-### 2. Tavily API 配置
+### 2. Tavily API settings
 
-如果你希望某些 Agent 能联网搜索最新信息，还需要配置：
+To let some agents search recent information, configure:
 
 - `Tavily API Key`
 - `Tavily API URL`
-- `联网搜索结果数`
+- `Search result count`
 
-说明：
+Notes:
 
-- 未填写 `Tavily API Key` 时，插件会尝试使用 Tavily 的 keyless 模式
-- 联网搜索更适合事实核验、时效性问题、规则变化、新闻或日期相关内容
+- If no `Tavily API Key` is provided, the plugin attempts Tavily keyless mode
+- Web search is most useful for fact checking, recent events, changing rules, and date-sensitive content
 
-### 3. Agent 配置
+### 3. Agent settings
 
-你可以在 `Agent配置` 页签中：
+In the `Agent settings` tab you can:
 
-- 新增 Agent
-- 删除 Agent
-- 恢复默认 Agent
-- 修改 Agent 的显示名称和角色设定
-- 为 Agent 绑定工具
+- add an agent
+- delete an agent
+- restore built-in agents
+- change display names and role instructions
+- attach tools to an agent
 
-每个 Agent 支持配置：
+Each agent supports:
 
-- `id`：唯一标识，建议英文短横线命名
-- `label`：显示在按钮和命令中的短标签
-- `title`：显示在结果页中的标题
-- `tools`：工具列表
-- `systemRole`：系统角色提示词
-- `focus`：审阅重点
+- `id`: unique identifier, preferably kebab-case English
+- `label`: short display label for buttons and commands
+- `title`: title shown in the result view
+- `tools`: enabled tool list
+- `systemRole`: system role prompt
+- `focus`: review focus
 
-### 4. 上下文菜单
+### 4. Context menu
 
-你可以在 `上下文菜单` 页签中：
+In the `Context menu` tab you can:
 
-- 控制哪些按钮显示在选中文本后的工具条中
-- 拖拽调整按钮顺序
+- control which buttons appear in the selection toolbar
+- drag to reorder buttons
 
-## 使用方式
+## Usage
 
-### 方式一：选中文本后快速审阅
+### Review selected text
 
-1. 在编辑器中选中一段文本
-2. 点击弹出的 QuickReview 工具按钮
-3. 选择某个 Agent、`综合审阅` 或 `润色`
-4. 在结果视图中查看输出
+1. Select text in the editor.
+2. Click the QuickReview action button.
+3. Choose an agent, `Combined review`, or `Polish`.
+4. Read the result in the review pane.
 
-### 方式二：通过命令面板运行
+### Run from the command palette
 
-插件会为每个 Agent 注册命令，包括：
+The plugin registers commands for each agent, including:
 
-- `某 Agent：审阅选中文本`
-- `某 Agent：审阅整篇笔记`
-- `综合审阅：审阅选中文本`
-- `综合审阅：审阅整篇笔记`
-- `一键润色：润色选中文本`
+- `Review selection`
+- `Review full note`
+- `Combined review: selection`
+- `Combined review: full note`
+- `Polish selection`
 
-### 方式三：继续追问
+### Ask follow-up questions
 
-在审阅结果视图中可以：
+In the result view you can:
 
-- 点击 `追问`
-- 输入后续问题
-- 在独立 Chat 视图中继续多轮交流
+- click `Follow up`
+- enter another question
+- continue in a dedicated chat view
 
-### 方式四：应用润色结果
+### Apply polished text
 
-当你运行 `润色` 后，可以在结果页点击 `应用到原文`，把生成内容写回当前选区。
+After running `Polish`, click `Apply to original` to replace the current selection with the generated version.
 
-## 结果视图说明
+## Result view
 
-QuickReview 会在独立视图中展示结果，支持：
+QuickReview shows results in a dedicated pane and supports:
 
-- 多条结果连续展示
-- 折叠 / 展开单条结果
-- 全部折叠 / 全部展开
-- 删除某条结果
-- 对选区结果定位回原文
+- multiple results in sequence
+- collapse or expand individual items
+- collapse all or expand all
+- delete a result
+- jump back to the original selection
 
-## 工具说明
+## Tools
 
 ### `current-date`
 
-返回当前本地日期信息，包括：
+Returns local date information including:
 
-- ISO 日期
-- 年/月/日
-- 星期
-- 时区
-- UTC 偏移
+- ISO date
+- year, month, and day
+- weekday
+- timezone
+- UTC offset
 
-适合用于：
+Useful for:
 
-- 处理“今天 / 昨天 / 明天 / 本周”之类相对日期表达
-- 校对日志、日报、周报、回顾类内容
+- interpreting relative dates such as today, yesterday, tomorrow, or this week
+- checking logs, journals, reports, and retrospectives
 
 ### `web-search`
 
-通过 Tavily 搜索最新公开信息，并返回：
+Uses Tavily to search recent public information and returns:
 
-- 摘要
-- 来源列表
-- 结果片段
+- summaries
+- source links
+- result snippets
 
-适合用于：
+Useful for:
 
-- 检查最新信息是否准确
-- 交叉验证事实、规则、日期、新闻和公开资料
+- checking whether recent information is accurate
+- cross-verifying facts, rules, dates, news, and public references
 
-## 适用建议
+## Recommendations
 
-如果你希望效果更稳定，建议这样使用：
+For more reliable results:
 
-- `事实` Agent 适合配合 `current-date` 或 `web-search`
-- `表述` / `重构` 更适合处理中长笔记、课程笔记、文章草稿
-- `衍生` / `关联` 适合用来扩展学习笔记与研究笔记
-- `润色` 适合做最后一轮语言优化，不适合当成事实校验工具
+- use `Facts` with `current-date` or `web-search`
+- use `Wording` or `Restructure` for medium or long notes
+- use `Expansion` or `Connection` to extend study or research notes
+- use `Polish` as a final language pass, not as a fact-checking tool
 
-## 开发
+## Development
 
-### 安装依赖
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-### 构建
+### Build
 
 ```bash
 npm run build
 ```
 
-### 运行测试
+### Test
 
 ```bash
 npm test
 ```
 
-### 完整校验
+### Verify
 
 ```bash
 npm run verify
 ```
 
-## 项目结构
+## Project structure
 
 ```text
 src/
-  core/        核心动作、提示词、Agent 定义
-  llm/         模型请求、流式响应、工具调用
-  services/    审阅、编辑器上下文、视图协调
-  settings/    设置页与 Agent 配置界面
-  views/       结果视图与追问聊天视图
-test/          单元测试
+  core/        core actions, prompts, and agent definitions
+  llm/         model requests, streaming responses, tool calls
+  services/    review flow, editor context, view coordination
+  settings/    settings tab and agent configuration UI
+  views/       result views and follow-up chat views
+test/          unit tests
 ```
 
-## 已知限制
+## Known limitations
 
-- 当前为桌面端插件，`manifest.json` 中已声明 `isDesktopOnly: true`
-- 联网搜索依赖 Tavily 接口可用性
-- 审阅质量高度依赖你配置的模型与提示词
-- 大段全文审阅会明显增加 token 消耗与响应时间
+- This is currently a desktop-only plugin and `manifest.json` sets `isDesktopOnly: true`
+- Web search depends on Tavily availability
+- Review quality depends heavily on your configured model and prompts
+- Reviewing long full-note content increases token usage and response time
+
+## 中文说明
+
+QuickReview 是一个多 Agent 审阅与润色插件，用来帮你快速检查笔记内容、优化表达、补充思路，并在需要时继续追问或直接把润色结果写回原文。
+
+- 适合写完笔记后做事实、逻辑和表达检查
+- 支持选区审阅、全文审阅、综合审阅和一键润色
+- 支持在结果页继续追问，并将润色结果直接应用回原文
+- 支持自定义 Agent、工具调用和上下文菜单
 
 ## License
 
-如需开源发布，建议在仓库中补充正式许可证文件。
+This repository includes an MIT license in [LICENSE](LICENSE).

@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "test": "node --test",
+    "check:build-sync": "git diff --exit-code -- main.js",
+    "verify": "npm run build && npm run check:build-sync && npm test"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "qreview",
+  "name": "Quick Review",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Multi-agent review and polish plugin for Obsidian notes.",
+  "author": "Bitcoming",
+  "authorUrl": "https://github.com/BitComing",
+  "isDesktopOnly": true
+}

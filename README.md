@@ -1,6 +1,10 @@
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 # QuickReview
 
 QuickReview is a multi-agent review and polishing plugin for notes. It helps you inspect facts, improve wording, expand ideas, and optionally write a polished version back into the editor.
+
+![screenshot](images\image.png)
 
 It is useful when you want to:
 
@@ -252,15 +256,6 @@ test/          unit tests
 - Web search depends on Tavily availability
 - Review quality depends heavily on your configured model and prompts
 - Reviewing long full-note content increases token usage and response time
-
-## 中文说明
-
-QuickReview 是一个多 Agent 审阅与润色插件，用来帮你快速检查笔记内容、优化表达、补充思路，并在需要时继续追问或直接把润色结果写回原文。
-
-- 适合写完笔记后做事实、逻辑和表达检查
-- 支持选区审阅、全文审阅、综合审阅和一键润色
-- 支持在结果页继续追问，并将润色结果直接应用回原文
-- 支持自定义 Agent、工具调用和上下文菜单
 
 ## License
 

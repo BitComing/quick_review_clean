@@ -520,6 +520,7 @@ var require_webSearchTool = __commonJS({
       const apiUrl = (settings.searchApiBaseUrl || DEFAULT_TAVILY_API_URL).trim();
       const apiKey = (settings.searchApiKey || "").trim();
       const maxResults = Number.isFinite(Number(settings.searchMaxResults)) ? Math.max(1, Math.min(10, Number(settings.searchMaxResults))) : DEFAULT_TAVILY_MAX_RESULTS;
+      const searchDepth = settings.searchDeepMode ? "advanced" : "basic";
       const headers = {
         "Content-Type": "application/json"
       };
@@ -535,7 +536,7 @@ var require_webSearchTool = __commonJS({
         body: JSON.stringify({
           query: normalizedQuery,
           topic: "general",
-          search_depth: "basic",
+          search_depth: searchDepth,
           include_answer: true,
           include_raw_content: false,
           max_results: maxResults
@@ -2514,6 +2515,7 @@ var require_settingsStore = __commonJS({
       searchApiKey: "",
       searchApiBaseUrl: DEFAULT_TAVILY_API_URL,
       searchMaxResults: DEFAULT_TAVILY_MAX_RESULTS,
+      searchDeepMode: false,
       hiddenToolbarButtons: [],
       toolbarActionOrder: [],
       reviewAgents: cloneDefaultAgents()
@@ -2559,6 +2561,7 @@ var require_settingsStore = __commonJS({
         ...source
       };
       normalized.hiddenToolbarButtons = Array.isArray(source.hiddenToolbarButtons) ? [...source.hiddenToolbarButtons] : [];
+      normalized.searchDeepMode = Boolean(source.searchDeepMode);
       normalized.reviewAgents = Array.isArray(source.reviewAgents) && source.reviewAgents.length > 0 ? source.reviewAgents.map(cloneAgent) : cloneDefaultAgents();
       const selectionActions = typeof getSelectionActions2 === "function" ? getSelectionActions2(normalized.reviewAgents) : [];
       normalized.toolbarActionOrder = normalizeToolbarActionOrder2(
@@ -2813,6 +2816,12 @@ var require_defaultSection = __commonJS({
       new Setting(tavilyCardEl).setName("\u8054\u7F51\u641C\u7D22\u7ED3\u679C\u6570").setDesc("\u5EFA\u8BAE 3 - 5 \u6761\uFF0C\u8FC7\u591A\u4F1A\u589E\u52A0 token \u6D88\u8017\u3002").addText(
         (text) => text.setPlaceholder("5").setValue(String(plugin.settings.searchMaxResults ?? 5)).onChange(async (value) => {
           plugin.settings.searchMaxResults = parseNumber(value, 5);
+          await plugin.saveSettings();
+        })
+      );
+      new Setting(tavilyCardEl).setName("\u6DF1\u5EA6\u641C\u7D22").setDesc("\u5F00\u542F\u540E\uFF0C\u8054\u7F51\u641C\u7D22\u4F1A\u4F7F\u7528\u6DF1\u5EA6\u6A21\u5F0F\uFF0C\u5C3D\u91CF\u8FD4\u56DE\u66F4\u5B8C\u6574\u7684\u53EF\u8BFB\u5185\u5BB9\uFF0C\u5E2E\u52A9 LLM \u66F4\u51C6\u786E\u8BFB\u53D6\u4E0E\u603B\u7ED3\u3002").addToggle(
+        (toggle) => toggle.setValue(Boolean(plugin.settings.searchDeepMode)).onChange(async (value) => {
+          plugin.settings.searchDeepMode = value;
           await plugin.saveSettings();
         })
       );

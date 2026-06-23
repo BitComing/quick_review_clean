@@ -311,6 +311,16 @@ function renderDefaultSection(containerEl, context) {
           await plugin.saveSettings();
         }),
     );
+
+  new Setting(tavilyCardEl)
+    .setName("深度搜索")
+    .setDesc("开启后，联网搜索会使用深度模式，尽量返回更完整的可读内容，帮助 LLM 更准确读取与总结。")
+    .addToggle((toggle) =>
+      toggle.setValue(Boolean(plugin.settings.searchDeepMode)).onChange(async (value) => {
+        plugin.settings.searchDeepMode = value;
+        await plugin.saveSettings();
+      }),
+    );
 }
 
 module.exports = {

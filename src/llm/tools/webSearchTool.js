@@ -64,6 +64,7 @@ async function handleWebSearch({ query } = {}) {
   const maxResults = Number.isFinite(Number(settings.searchMaxResults))
     ? Math.max(1, Math.min(10, Number(settings.searchMaxResults)))
     : DEFAULT_TAVILY_MAX_RESULTS;
+  const searchDepth = settings.searchDeepMode ? "advanced" : "basic";
 
   const headers = {
     "Content-Type": "application/json",
@@ -82,7 +83,7 @@ async function handleWebSearch({ query } = {}) {
     body: JSON.stringify({
       query: normalizedQuery,
       topic: "general",
-      search_depth: "basic",
+      search_depth: searchDepth,
       include_answer: true,
       include_raw_content: false,
       max_results: maxResults,

@@ -129,6 +129,41 @@ test("handleWebSearch uses keyless mode when api key is empty", async () => {
   assert.equal(capturedRequest.headers.Authorization, undefined);
 });
 
+test("handleWebSearch uses advanced depth when deep mode is enabled", async () => {
+  let capturedRequest;
+  const { handleWebSearch } = loadWebSearchTool(async (request) => {
+    capturedRequest = request;
+    return {
+      json: {
+        results: [],
+      },
+    };
+  });
+
+  await handleWebSearch.call(
+    {
+      requestUrl: async (request) => {
+        capturedRequest = request;
+        return {
+          json: {
+            results: [],
+          },
+        };
+      },
+      settings: {
+        searchApiKey: "tvly-secret",
+        searchApiBaseUrl: "https://api.tavily.com/search",
+        searchMaxResults: 5,
+        searchDeepMode: true,
+      },
+    },
+    { query: "需要更深入内容的主题" },
+  );
+
+  const body = JSON.parse(capturedRequest.body);
+  assert.equal(body.search_depth, "advanced");
+});
+
 test("handleWebSearch rejects empty query", async () => {
   const { handleWebSearch } = loadWebSearchTool(async () => {
     throw new Error("should not call requestUrl");

@@ -63,11 +63,13 @@ test("normalizeSettings restores defaults and normalizes toolbar order", () => {
       reviewAgents: [],
       hiddenToolbarButtons: ["writing"],
       toolbarActionOrder: ["writing", "missing", "all-review"],
+      searchDeepMode: true,
     },
     { getSelectionActions },
   );
 
   assert.equal(settings.providerType, "anthropic");
+  assert.equal(settings.searchDeepMode, true);
   assert.deepEqual(settings.hiddenToolbarButtons, ["writing"]);
   assert.equal(settings.reviewAgents.length > 0, true);
   const expectedToolbarActionOrder = normalizeToolbarActionOrder(
@@ -75,6 +77,12 @@ test("normalizeSettings restores defaults and normalizes toolbar order", () => {
     getSelectionActions(cloneDefaultAgents()),
   );
   assert.deepEqual(settings.toolbarActionOrder, expectedToolbarActionOrder);
+});
+
+test("normalizeSettings falls back searchDeepMode to false", () => {
+  const settings = normalizeSettings({}, { getSelectionActions });
+
+  assert.equal(settings.searchDeepMode, false);
 });
 
 test("renameAgentReferences updates hidden and ordered action ids", () => {

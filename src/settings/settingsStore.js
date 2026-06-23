@@ -16,6 +16,7 @@ const DEFAULT_SETTINGS = {
   searchApiKey: "",
   searchApiBaseUrl: DEFAULT_TAVILY_API_URL,
   searchMaxResults: DEFAULT_TAVILY_MAX_RESULTS,
+  searchDeepMode: false,
   hiddenToolbarButtons: [],
   toolbarActionOrder: [],
   reviewAgents: cloneDefaultAgents(),
@@ -72,6 +73,7 @@ function normalizeSettings(data, { getSelectionActions } = {}) {
   normalized.hiddenToolbarButtons = Array.isArray(source.hiddenToolbarButtons)
     ? [...source.hiddenToolbarButtons]
     : [];
+  normalized.searchDeepMode = Boolean(source.searchDeepMode);
   normalized.reviewAgents =
     Array.isArray(source.reviewAgents) && source.reviewAgents.length > 0
       ? source.reviewAgents.map(cloneAgent)

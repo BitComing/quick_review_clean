@@ -3,3 +3,4 @@ data.json
 .env.*
 node_modules/
 doc/
+writings/
